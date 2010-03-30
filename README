@@ -1,0 +1,75 @@
+Tilburg, 28 March 2010
+Herman Stehouwer
+
+Suffixarray package
+
+Licenced under the GPLv3, see the LICENCE file.
+
+INTRODUCTION:
+
+This package implements an efficient suffixarray in template-based C++.
+Space utilisation for a corpus of lenght N is N*sizeof(index) + 4N*sizeof(char) + exceptions.
+(where index is defined as the type used to index the corpus, usually an unsigned int for std::vector and std::string)
+(Exceptions are fairly rare, we store most indexes as relative indexes and the longest-common-prefix values as characters)
+In high-LCP corpora this implementation will not be very efficient.
+Natural Language data is stored very efficiently, which was our goal.
+
+Buiding the suffix array is fairly efficient time-wise using a deep-shallow sorting strategy with a blind trie.
+(Much faster than C++'s regular sort function, due to the nature of the datastructure.)
+
+The class over which one builds the suffix array must:
+	- Be some sort of list.
+	- Support the < operator on its elements.
+	- Support the at(i) and [i] access methods.
+	- Support random access iterators, specifically begin() and end()
+	- Have printable elements. (i.e. std::cerr << ....)
+
+A simple class that supports these is std::string.
+Also a std::vector<string> or std::vector<int> would be suitable.
+In fact wordstring.h and intstring.h provide exactly these classes, with added operator overloading for easy inputstream conversion.
+
+This suffix array library provides the following core functionality once the suffix array is build:
+	- Is the query an infix of the read-in corpus.
+	- Answer how often the query occurs in the corpus.
+	- Answer where all the positions of the query in the corpus are.
+	- Do the same for skipgrams.
+These questions are answered very efficiently by using the implicit suffix tree structure on the suffix array.
+
+USAGE:
+
+A simple usage example is given in the file main.cpp.
+This example reads in a corpus (a list of whitespace seperated strings) as given on the commandline.
+HAving build the suffix array it will listen to stdin for queries (without wildcards) and answer them
+with the number of occurences in the corpus.
+
+General usage of the suffix array:
+1.	Fill some sort of list on which you want the suffix array build.
+	(for example a string or a list of strings).
+2.	Add a unique, largest element to the back of the list.
+	For example numeric_limits<int>::max() to a list of integers.
+	This is needed for the algorithm to work.
+3.	Construct a suffixarray of the type suffixarray<listtype> and construct it with the prebuild list.
+4.	Query the suffix array for information. Several functions are provided for this in the library.
+	The initial function declarations are well documented.
+	For example:
+	  // find_all_positions_count finds the number of positions of
+	  // substring w occurring in the suffix array.  wildcard indicates
+	  // which element_type should be considered the wildcard element.
+	  // Wildcards match any one element_type.
+	  // size_type
+	  // find_all_positions_count( const value_type& w, element_type wildcard = element_type());
+	It is important to note that the wildcard is by default the default value of the element_type of the list on which the suffix array is build.
+	For a list of integers this means 0.
+	_Do_Not_ use this value in your original input list as this will break your queries (unless you use a different wildcard than the default).
+
+To simply get counts of specific queries in a plaintext, whitespace-seperated corpus without anotations simply.
+- make
+- ./main -f corpusfile
+- type queries on the stdin and get your counts on the stdout.
+
+BUGS ETC.
+
+For bugs, remarks, suggestions etc. please email the author at j.h.stehouwer(_AT-)uvt.nl.
+All comments are welcomed.
+
+If you use the library for a software project or for research I would love to know your results.
