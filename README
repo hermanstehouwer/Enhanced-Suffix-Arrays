@@ -1,3 +1,5 @@
+#ENHANCED SUFFIX ARRAYS
+
 Tilburg, 28 March 2010
 Herman Stehouwer
 
@@ -69,7 +71,7 @@ To simply get counts of specific queries in a plaintext, whitespace-seperated co
 
 BUGS ETC.
 
-For bugs, remarks, suggestions etc. please email the author at j.h.stehouwer(_AT-)uvt.nl.
+For bugs, remarks, suggestions etc. please email the author at j.h.stehouwer (_AT-) gmail.com.
 All comments are welcomed.
 
 If you use the library for a software project or for research I would love to know your results.
